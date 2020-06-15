@@ -1,0 +1,6 @@
+configuration-as-code
+prometheus
+blueocean
+bouncycastle-api:2.18
+command-launcher:1.4
+jdk-tool:1.4

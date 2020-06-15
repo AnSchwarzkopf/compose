@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  jenkins:
+    image: jenkins:1.0
+    build: 
+      context: ./jenkins_image
+      dockerfile: Dockerfile
+    container_name: jenkins
+    environment: 
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml
+    volumes:
+      - ./jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+  nginx:
+    image: nginx:mainline-alpine
+    container_name: nginx
+    links: 
+      - jenkins
+      - grafana
+    depends_on: 
+      - certificate
+      - jenkins
+    ports:
+      - 80:80
+      - 443:443
+    restart: on-failure
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+  prometheus:
+    image: prom/prometheus:v2.19.0
+    container_name: prometheus
+    links: 
+      - jenkins
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  grafana:
+    image: grafana/grafana:7.0.3
+    container_name: grafana
+    links:
+      - prometheus
+    user: "1000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+  certificate:
+    image: certificate:1.0
+    build:
+      context: ./certificate
+      dockerfile: Dockerfile
+    container_name: certificate
+    restart: on-failure
+    volumes: 
+      - ./nginx/ssl:/home/ssl

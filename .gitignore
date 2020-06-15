@@ -1,0 +1,7 @@
+prometheus/prometheus.yml
+backup-cron
+nginx/ssl/*.*
+
+
+jenkins/*
+!jenkins/jenkins.yaml
