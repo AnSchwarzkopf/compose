@@ -1,5 +1,4 @@
 prometheus/prometheus.yml
-backup-cron
 nginx/ssl/*.*
 
 
