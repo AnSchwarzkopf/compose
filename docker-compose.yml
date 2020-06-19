@@ -52,5 +52,11 @@ services:
       dockerfile: Dockerfile
     container_name: certificate
     restart: on-failure
+    environment: 
+      - COUNTRY=DE
+      - STATE=BW
+      - LOCATION=ULM
+      - NAME="Andreas Schwarzkopf"
+      - MAIL="schwarzkopf.and@gmail.com"
     volumes: 
       - ./nginx/ssl:/home/ssl
